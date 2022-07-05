@@ -25,19 +25,19 @@ const commentController = {
     // Add a reply
     addReply({ params, body }, res) {
         Comment.findOneAndUpdate(
-          { _id: params.commentId },
-          { $push: { replies: body } },
-          { new: true }
+            { _id: params.commentId },
+            { $push: { replies: body } },
+            { new: true, runValidators: true }
         )
-          .then(dbPizzaData => {
-            if (!dbPizzaData) {
-              res.status(404).json({ message: 'No pizza found with this id!' });
-              return;
-            }
-            res.json(dbPizzaData);
-          })
-          .catch(err => res.json(err));
-      },
+            .then(dbPizzaData => {
+                if (!dbPizzaData) {
+                    res.status(404).json({ message: 'No pizza found with this id!' });
+                    return;
+                }
+                res.json(dbPizzaData);
+            })
+            .catch(err => res.json(err));
+    },
 
     // remove comment
     removeComment({ params }, res) {
@@ -61,17 +61,17 @@ const commentController = {
             })
             .catch(err => res.json(err));
     },
-    
+
     // remove reply
-removeReply({ params }, res) {
-    Comment.findOneAndUpdate(
-      { _id: params.commentId },
-      { $pull: { replies: { replyId: params.replyId } } },
-      { new: true }
-    )
-      .then(dbPizzaData => res.json(dbPizzaData))
-      .catch(err => res.json(err));
-  }
+    removeReply({ params }, res) {
+        Comment.findOneAndUpdate(
+            { _id: params.commentId },
+            { $pull: { replies: { replyId: params.replyId } } },
+            { new: true }
+        )
+            .then(dbPizzaData => res.json(dbPizzaData))
+            .catch(err => res.json(err));
+    }
 };
 
 module.exports = commentController;
